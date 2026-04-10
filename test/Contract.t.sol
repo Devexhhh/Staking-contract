@@ -22,7 +22,17 @@ contract TestContract is Test {
     function test_RevertIfStakeWithoutValue() public {
         uint value = 10 ether;
 
-        vm.expectRevert(); // Expect the transaction to revert
-        c.stake(value); // No ETH sent → should fail
+        vm.expectRevert();
+        c.stake(value);
+    }
+
+    function testUnstake() public {
+        uint value = 10 ether;
+        vm.startPrank(0x68358E4291918118D41598b00c37e0513DC4fae9);
+        vm.deal(0x68358E4291918118D41598b00c37e0513DC4fae9, value);
+        c.stake{value: value}(value);
+        c.unstake(value);
+
+        assert(c.totalStake() == 0);
     }
 }
